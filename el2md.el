@@ -16,52 +16,47 @@
 
 ;;; Commentary:
 
-;; This package converts *Commentary* section in Emacs Lisp modules to
-;; text files in MarkDown format, a format supporting headings, code
-;; blocks, basic text styles, bullet lists etc.
+;; This package converts *Commentary* section in Emacs Lisp modules to text
+;; files in Markdown format, a format supporting headings, code blocks, basic
+;; text styles, bullet lists etc.
 ;;
-;; The MarkDown is used by many web sites as an alternative to plain
-;; texts. For example, it is used by sites like StackOverflow and
-;; GitHub.
+;; The Markdown is used by many web sites as an alternative to plain texts. For
+;; example, it is used by sites like StackOverflow, GitLab and GitHub.
 
 ;; What is converted:
 ;;
-;; Everything between the `Commentary:' and `Code:' markers are
-;; included in the generated text. In addition, the title and *some*
-;; metadata are also included.
+;; Everything between the `Commentary:' and `Code:' markers are included in the
+;; generated text. In addition, the title and *some* metadata are also included.
 
 ;; How to write comments:
 ;;
-;; The general rule of thumb is that the Emacs Lisp module should be
-;; written using plain text, as they always have been written.
+;; The general rule of thumb is that the Emacs Lisp module should be written
+;; using plain text, as they always have been written.
 ;;
-;; However, some things are recognized. A single line ending with a
-;; colon is considered a *heading*. If this line is at the start of a
-;; comment block, it is considered a main (level 2) heading. Otherwise
-;; it is considered a (level 3) subheading. Note that the line
-;; precedes a bullet list or code, it will not be treated as a
-;; subheading.
+;; However, some things are recognized. A single line ending with a colon is
+;; considered a *heading*. If this line is at the start of a comment block, it
+;; is considered a main (level 2) heading. Otherwise it is considered a (level
+;; 3) subheading. Note that the line precedes a bullet list or code, it will not
+;; be treated as a subheading.
 ;;
 ;; Use Markdown formatting:
 ;;
-;; It is possible to use markdown syntax in the text, like *this*, and
-;; **this**.
+;; It is possible to use markdown syntax in the text, like *this*, and **this**.
 ;;
 ;; Conventions:
 ;;
-;; The following conventions are used when converting elisp comments
-;; to MarkDown:
+;; The following conventions are used when converting elisp comments to
+;; Markdown:
 ;;
-;; * Code blocks using either the Markdown convention by indenting the
-;;   block with four extra spaces, or by starting a paragraph with a
-;;   `('.
+;; * Code blocks using either the Markdown convention by indenting the block
+;;   with four extra spaces, or by starting a paragraph with a `('.
 ;;
-;; * In elisp comments, a reference to `code' (backquote - quote),
-;;   they will be converted to MarkDown style (backquote - backquote).
+;; * In elisp comments, a reference to `code' (backquote - quote), they will be
+;;   converted to Markdown style (backquote - backquote).
 ;;
-;; * In elisp comments, bullets in lists are typically separated by
-;;   empty lines. In the converted text, the empty lines are removed,
-;;   as required by MarkDown.
+;; * In elisp comments, bullets in lists are typically separated by empty lines.
+;;   In the converted text, the empty lines are removed, as required by
+;;   Markdown.
 ;;
 
 ;; Example:
@@ -87,35 +82,33 @@
 
 ;; Usage:
 ;;
-;; To generate the markdown representation of the current buffer to a
-;; temporary buffer, use:
+;; To generate the markdown representation of the current buffer to a temporary
+;; buffer, use:
 ;;
 ;;     M-x el2md-view-buffer RET
 ;;
-;; To write the markdown representation of the current buffer to a
-;; file, use:
+;; To write the markdown representation of the current buffer to a file, use:
 ;;
 ;;     M-x el2md-write-file RET name-of-file RET
 ;;
-;; In sites like GitHub, if a file named README.md exists in the root
-;; directory of an archive, it is displayed when viewing the archive.
-;; To generate a README.md file, in the same directory as the current
-;; buffer, use:
+;; In sites like GitLab, if a file named readme.md exists in the root directory
+;; of an archive, it is displayed when viewing the archive. To generate a
+;; readme.md file, in the same directory as the current buffer, use:
 ;;
 ;;     M-x el2md-write-readme RET
 
 ;; Post processing:
 ;;
-;; To post-process the output, add a function to
-;; `el2md-post-convert-hook'.  The functions in the hook should
-;; accept one argument, the output stream (typically the destination
-;; buffer).  When the hook is run current buffer is the source buffer.
+;; To post-process the output, add a function to `el2md-post-convert-hook'. The
+;; functions in the hook should accept one argument, the output stream
+;; (typically the destination buffer). When the hook is run current buffer is
+;; the source buffer.
 
 ;; Batch mode:
 ;;
-;; You can run el2md in batch mode. The function
-;; `el2md-write-readme' can be called directly using the `-f'
-;; option. The others can be accessed with the `--eval' form.
+;; You can run el2md in batch mode. The function `el2md-write-readme' can be
+;; called directly using the `-f' option. The others can be accessed with the
+;; `--eval' form.
 ;;
 ;; For example,
 ;;
@@ -128,7 +121,6 @@
 (defvar el2md-empty-comment "^;;+ *\\(\\({{{\\|}}}\\).*\\)?$"
   "Regexp of lines that should be considered empty.")
 
-
 (defvar el2md-translate-keys-within-markdown-quotes nil
   "When non-nil, match key sequences found between backquotes.
 
@@ -136,70 +128,22 @@ By default, this package only converts things quoted using
 backquote and quote, which is the standard elisp way to quote
 things in comments.")
 
-
 (defvar el2md-keys '("RET" "TAB")
   "List of keys that sould be translated to <key>...</key>.")
 
-
 (defvar el2md-post-convert-hook nil
-  "Hook that is run after a buffer has been converted to MarkDown.
+  "Hook that is run after a buffer has been converted to Markdown.
 
 The functions in the hook should accept one argument, the output
-stream (typically the destination buffer).  When the hook is run
+stream (typically the destination buffer). When the hook is run
 current buffer is the source buffer.")
 
-
-;;;###autoload
-(defun el2md-view-buffer ()
-  "Convert comment section to markdown and display in temporary buffer."
-  (interactive)
-  (with-output-to-temp-buffer "*el2md*"
-    (el2md-convert)))
-
-
-;;;###autoload
-(defun el2md-write-file (&optional file-name overwrite-without-confirm)
-  "Convert comment section to markdown and write to file."
-  (interactive
-   (let ((suggested-name (and (buffer-file-name)
-                              (concat (file-name-sans-extension
-                                       (buffer-file-name))
-                                      ".md"))))
-     (list (read-file-name "Write markdown file: "
-                           default-directory
-                           suggested-name
-                           nil
-                           (file-name-nondirectory suggested-name)))))
-  (unless file-name
-    (setq file-name (concat (buffer-file-name) ".md")))
-  (let ((buffer (current-buffer))
-        (orig-buffer-file-coding-system buffer-file-coding-system))
-    (with-temp-buffer
-      ;; Inherit the file coding from the buffer being converted.
-      (setq buffer-file-coding-system orig-buffer-file-coding-system)
-      (let ((standard-output (current-buffer)))
-        (with-current-buffer buffer
-          (el2md-convert))
-        ;; Note: Must set `require-final-newline' inside
-        ;; `with-temp-buffer', otherwise the value will be overridden by
-        ;; the buffers local value.
-        (let ((require-final-newline nil))
-          (write-file file-name (not overwrite-without-confirm)))))))
-
-
-;;;###autoload
-(defun el2md-write-readme ()
-  "Generate README.md, designed to be used in batch mode."
-  (interactive)
-  (el2md-write-file "README.md" noninteractive))
-
-
 (defun el2md-convert ()
-  "Print commentart section of current buffer as MarkDown.
+  "Print comments section of current buffer as Markdown.
 
-After conversion, `el2md-post-convert-hook' is called.  The
+After conversion, `el2md-post-convert-hook' is called. The
 functions in the hook should accept one argument, the output
-stream (typically the destination buffer).  When the hook is run
+stream (typically the destination buffer). When the hook is run
 current buffer is the source buffer."
   (save-excursion
     (goto-char (point-min))
@@ -220,15 +164,13 @@ current buffer is the source buffer."
       (princ (concat
               "Converted" from
               " by "
-              "[*el2md*](https://github.com/Lindydancer/el2md)."))
+              "[*el2md*](https://gitlab.com/thornjad/el2md)."))
       (terpri))
     (run-hook-with-args 'el2md-post-convert-hook standard-output)))
-
 
 (defun el2md-skip-empty-lines ()
   (while (and (bolp) (eolp) (not (eobp)))
     (forward-line)))
-
 
 ;; Some packages place lincense blocks in the commentary section,
 ;; ignore them.
@@ -239,7 +181,6 @@ current buffer is the source buffer."
     (while (not (or (eobp)
                     (looking-at "^;;;")))
       (forward-line))))
-
 
 (defun el2md-translate-string (string)
   (let ((res "")
@@ -262,7 +203,6 @@ current buffer is the source buffer."
         (setq res (concat res beg content end))))
     (concat res string)))
 
-
 (defun el2md-convert-title ()
   (when (looking-at ";;+ \\(.*\\)\\.el --+ \\(.*\\)$")
     (let ((package-name (match-string-no-properties 1))
@@ -272,20 +212,18 @@ current buffer is the source buffer."
       (el2md-emit-header 1 (concat package-name " - " title))
       (forward-line))))
 
-
 (defun el2md-convert-formal-information ()
   (save-excursion
     (goto-char (point-min))
     (let ((limit (save-excursion
                    (re-search-forward "^;;; Commentary:$" nil t))))
       (when limit
-        (el2md-convert-formal-information-item "Author"  limit)
-        (el2md-convert-formal-information-item "Version" limit)
-        (el2md-convert-formal-information-item "URL"     limit 'link)
+        (el2md-convert-formal-information-item "Author")
+        (el2md-convert-formal-information-item "Version")
+        (el2md-convert-formal-information-item "URL" 'link)
         (terpri)))))
 
-
-(defun el2md-convert-formal-information-item (item lim &optional link)
+(defun el2md-convert-formal-information-item (item &optional link)
   (when (re-search-forward (concat "^;;+ " item ": *\\(.*\\)") nil t)
     (let ((s (match-string-no-properties 1)))
       (if link
@@ -293,11 +231,9 @@ current buffer is the source buffer."
       (princ (concat "*" item ":* " s "<br>"))
       (terpri))))
 
-
 (defun el2md-skip-to-commentary ()
   (if (re-search-forward ";;; Commentary:$" nil t)
       (forward-line)))
-
 
 (defun el2md-convert-section ()
   (el2md-skip-empty-lines)
@@ -308,7 +244,6 @@ current buffer is the source buffer."
     (let ((p (point)))
       (el2md-emit-rest-of-comment)
       (not (eq p (point))))))
-
 
 (defun el2md-emit-header (count title)
   (princ (make-string count ?#))
@@ -323,7 +258,6 @@ current buffer is the source buffer."
   (princ (el2md-translate-string title))
   (terpri)
   (terpri))
-
 
 (defun el2md-is-at-bullet-list ()
   "Non-nil when next non-empty comment line is a bullet list."
@@ -358,7 +292,7 @@ current buffer is the source buffer."
           ;; Header
           (progn
             (el2md-emit-header (if first 2 3)
-                                     (match-string-no-properties 1))
+                               (match-string-no-properties 1))
             (forward-line 2))
         ;; Section of text. (Things starting with a parenthesis is
         ;; assumes to be code.)
@@ -378,6 +312,48 @@ current buffer is the source buffer."
               nil
             (terpri))))
       (setq first nil))))
+
+;;;###autoload
+(defun el2md-view-buffer ()
+  "Convert comment section to markdown and display in temporary buffer."
+  (interactive)
+  (with-output-to-temp-buffer "*el2md*"
+    (el2md-convert)))
+
+;;;###autoload
+(defun el2md-write-file (&optional file-name overwrite-without-confirm)
+  "Convert comment section to markdown and write to FILE-NAME."
+  (interactive
+   (let ((suggested-name (and (buffer-file-name)
+                              (concat (file-name-sans-extension
+                                       (buffer-file-name))
+                                      ".md"))))
+     (list (read-file-name "Write markdown file: "
+                           default-directory
+                           suggested-name
+                           nil
+                           (file-name-nondirectory suggested-name)))))
+  (unless file-name
+    (setq file-name (concat (buffer-file-name) ".md")))
+  (let ((buffer (current-buffer))
+        (orig-buffer-file-coding-system buffer-file-coding-system))
+    (with-temp-buffer
+      ;; Inherit the file coding from the buffer being converted.
+      (setq buffer-file-coding-system orig-buffer-file-coding-system)
+      (let ((standard-output (current-buffer)))
+        (with-current-buffer buffer
+          (el2md-convert))
+        ;; Note: Must set `require-final-newline' inside
+        ;; `with-temp-buffer', otherwise the value will be overridden by
+        ;; the buffers local value.
+        (let ((require-final-newline nil))
+          (write-file file-name (not overwrite-without-confirm)))))))
+
+;;;###autoload
+(defun el2md-write-readme ()
+  "Generate readme.md, designed to be used in batch mode."
+  (interactive)
+  (el2md-write-file "readme.md" noninteractive))
 
 (provide 'el2md)
 
