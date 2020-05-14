@@ -105,7 +105,7 @@
 ;; - The end of the _Commentary_ section includes the first comment in the code
 ;;   if there's no empty line before the _Code_ comment.
 
-;; License:
+;;; License:
 ;;
 ;; `el2md' was originally forked from `el2markdown' by Anders Lindgren. It has
 ;; since been improved, but carries the same license as the original work.

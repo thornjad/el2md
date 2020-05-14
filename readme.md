@@ -100,21 +100,6 @@ For example,
 - The end of the _Commentary_ section includes the first comment in the code
   if there's no empty line before the _Code_ comment.
 
-## License
-
-`el2md` was originally forked from `el2markdown` by Anders Lindgren. It has
-since been improved, but carries the same license as the original work.
-
-Copyright (c) 2020 Jade Michael Thornton
-Copyright (c) 2013 Anders Lindgren
-
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, version 3. This program is distributed in the hope that it will
-be useful, but without any warranty; without even the implied warranty of
-merchantability or fitness for a particular purpose. See the GNU General
-Public License for more details.
-
 
 ---
 Converted from `el2md.el` by [_el2md_](https://gitlab.com/thornjad/el2md).
