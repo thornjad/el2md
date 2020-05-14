@@ -1,7 +1,7 @@
 # el2md - Convert commentary section of elisp files to markdown
 
 _Author:_ Jade Michael Thornton<br>
-_Version:_ 1.0.1<br>
+_Version:_ 1.0.2<br>
 _URL:_ [https://gitlab.com/thornjad/el2md](https://gitlab.com/thornjad/el2md)<br>
 
 This package converts the _Commentary_ section in an Elisp module to text

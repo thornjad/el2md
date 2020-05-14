@@ -1,7 +1,7 @@
 ;;; el2md.el --- Convert commentary section of elisp files to markdown. -*- lexical-binding:t -*-
 
 ;; Author: Jade Michael Thornton
-;; Version: 1.0.1
+;; Version: 1.0.2
 ;; URL: https://gitlab.com/thornjad/el2md
 
 ;;; Commentary:
@@ -182,7 +182,7 @@ current buffer is the source buffer."
 ;; ignore them.
 (defun el2md-skip-license ()
   "Skip license blocks."
-  (when (looking-at  "^;;; License:[ \t]*$")
+  (when (looking-at  "^;;; \\(License\\|Copying\\):[ \t]*$")
     (forward-line)
     (while (not (or (eobp)
                     (looking-at "^;;;")))
