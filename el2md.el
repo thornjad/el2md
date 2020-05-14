@@ -170,7 +170,7 @@ current buffer is the source buffer."
       (princ (concat
               "Converted" from
               " by "
-              "[*el2md*](https://gitlab.com/thornjad/el2md)."))
+              "[_el2md_](https://gitlab.com/thornjad/el2md)."))
       (terpri))
     (run-hook-with-args 'el2md-post-convert-hook standard-output)))
 
@@ -234,7 +234,7 @@ current buffer is the source buffer."
     (let ((s (match-string-no-properties 1)))
       (if link
           (setq s (concat "[" s "](" s ")")))
-      (princ (concat "*" item ":* " s "<br>"))
+      (princ (concat "_" item ":_ " s "<br>"))
       (terpri))))
 
 (defun el2md-skip-to-commentary ()
