@@ -1,0 +1,63 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 12 * * *'
+
+jobs:
+  test-melpa:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        emacs_version:
+          - 27.1
+          - 28.1
+        ignore_warnings:
+          - true
+        check:
+          - melpa
+        include:
+          - emacs_version: snapshot
+            check: melpa
+            ignore_warnings: false
+    steps:
+    - uses: actions/checkout@v3
+    - uses: purcell/setup-emacs@master
+      with:
+        version: ${{ matrix.emacs_version }}
+    - uses: leotaku/elisp-check@v1.3
+      with:
+        file: el2md.el
+        check: ${{ matrix.check }}
+        ignore_warnings: ${{ matrix.ignore_warnings }}
+        
+  test-builtin:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        emacs_version:
+          - 27.1
+          - 28.1
+          - snapshot
+        ignore_warnings:
+          - true
+        check:
+          - load-file
+          - byte-compile
+          - checkdoc
+          - package-lint
+    steps:
+    - uses: actions/checkout@v3
+    - uses: purcell/setup-emacs@master
+      with:
+        version: ${{ matrix.emacs_version }}
+    - uses: leotaku/elisp-check@v1.3
+      with:
+        file: el2md.el
+        check: ${{ matrix.check }}
+        ignore_warnings: ${{ matrix.ignore_warnings }}
