@@ -103,3 +103,6 @@ For example,
 
 ---
 Converted from `el2md.el` by [_el2md_](https://gitlab.com/thornjad/el2md).
+
+Found this useful? [Buy me a coffee!](https://buymeacoffee.com/jademichaelthornton)
+
